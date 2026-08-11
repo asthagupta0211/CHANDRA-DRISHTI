@@ -4,6 +4,8 @@
 
 > *"Vision Beyond the Lunar Horizon"*
 
+🚀 **[Live Demo: Chandra Drishti Web App](https://chandra-drishti-backend.onrender.com/)**
+
 **CHANDRA DRISHTI** is a lunar terrain-analysis system that uses advanced algorithmic super-resolution to transform 5m TMC lunar imagery into a 1m grid-spacing representation and generate a multi-hazard map for autonomous landing-site selection. 
 
 TMC provides broad lunar coverage, while high-resolution OHRC data has limited coverage. Our approach aims to reduce this limitation by deriving high-resolution hazard information from widely available TMC data.
@@ -143,18 +145,13 @@ Then navigate to `http://localhost:8000` in your web browser.
 
 ## ☁️ Deployment
 
-This project is configured to be easily deployed to **Vercel** and **Render**.
+This project is configured for one-click deployment using **Render**. The Flask server is set up to securely serve the frontend web interface natively.
 
-### Backend (Render)
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/asthagupta0211/CHANDRA-DRISHTI)
 
 1. Click the **Deploy to Render** button above.
-2. Render will automatically detect the `render.yaml` file and deploy the Flask API.
-
-### Frontend (Vercel)
-1. Connect this repository to [Vercel](https://vercel.com/).
-2. Set the "Root Directory" to `SIH1519_CHANDRA DRISHTI_CODE/frontend`, and deploy.
-   - *Note: Once the backend is live, remember to update the `PROD_BACKEND_URL` in `frontend/script.js` with your new Render URL and push to GitHub.*
+2. Render will automatically detect the `render.yaml` file, build the environment, and deploy your live URL.
+3. *Note on Machine Learning:* By default, the heavy PyTorch AI models are disabled in the cloud environment to accommodate free-tier memory constraints (512MB RAM). For full AI processing, run the backend script locally.
 
 ---
 
