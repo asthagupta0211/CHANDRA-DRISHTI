@@ -70,9 +70,16 @@ Then visit `http://localhost:8000`.
 
 This project is configured to be easily deployed to **Vercel** and **Render**.
 
-1. **Backend (Render)**: Connect this repository to [Render.com](https://render.com/) and create a Blueprint instance. Render will automatically detect the `render.yaml` file and deploy the Flask API.
-2. **Frontend (Vercel)**: Connect this repository to [Vercel](https://vercel.com/), set the "Root Directory" to `frontend`, and deploy.
-   - *Note: Once the backend is live, remember to update the `PROD_BACKEND_URL` in `frontend/script.js` with your Render URL.*
+### Backend (Render)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/asthagupta0211/CHANDRA-DRISHTI)
+
+1. Click the **Deploy to Render** button above.
+2. Render will automatically detect the `render.yaml` file and deploy the Flask API.
+
+### Frontend (Vercel)
+1. Connect this repository to [Vercel](https://vercel.com/).
+2. Set the "Root Directory" to `frontend`, and deploy.
+   - *Note: Once the backend is live, remember to update the `PROD_BACKEND_URL` in `frontend/script.js` with your new Render URL and push to GitHub.*
 
 ## 📜 License
 
