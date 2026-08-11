@@ -141,6 +141,23 @@ Then navigate to `http://localhost:8000` in your web browser.
 
 ---
 
+## ☁️ Deployment
+
+This project is configured to be easily deployed to **Vercel** and **Render**.
+
+### Backend (Render)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/asthagupta0211/CHANDRA-DRISHTI)
+
+1. Click the **Deploy to Render** button above.
+2. Render will automatically detect the `render.yaml` file and deploy the Flask API.
+
+### Frontend (Vercel)
+1. Connect this repository to [Vercel](https://vercel.com/).
+2. Set the "Root Directory" to `SIH1519_CHANDRA DRISHTI_CODE/frontend`, and deploy.
+   - *Note: Once the backend is live, remember to update the `PROD_BACKEND_URL` in `frontend/script.js` with your new Render URL and push to GitHub.*
+
+---
+
 ## 🎯 Expected Output
 
 The system targets near-real-time processing, generating a multi-layered response:
