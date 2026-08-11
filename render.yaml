@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: chandra-drishti-backend
+    env: python
+    buildCommand: "cd 'SIH1519_CHANDRA DRISHTI_CODE/backend' && pip install -r requirements.txt"
+    startCommand: "cd 'SIH1519_CHANDRA DRISHTI_CODE/backend' && gunicorn server:app"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.0
