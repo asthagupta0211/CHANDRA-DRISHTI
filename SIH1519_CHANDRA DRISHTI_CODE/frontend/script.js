@@ -59,8 +59,12 @@ fileInputs.forEach(type => {
 // ---------- Load Sample Data ----------
 document.getElementById('load-sample-btn').addEventListener('click', async () => {
     try {
-        const host = window.location.hostname || '127.0.0.1';
-        const sampleUrl = `http://${host}:5000/random_sample`;
+        const host = window.location.hostname;
+        const isLocal = host === 'localhost' || host === '127.0.0.1' || host === '';
+        // UPDATE THIS URL ONCE YOUR RENDER BACKEND IS DEPLOYED
+        const PROD_BACKEND_URL = 'https://chandra-drishti-backend.onrender.com';
+        const baseUrl = isLocal ? `http://${host || '127.0.0.1'}:5000` : PROD_BACKEND_URL;
+        const sampleUrl = `${baseUrl}/random_sample`;
         
         const btn = document.getElementById('load-sample-btn');
         const oldText = btn.textContent;
@@ -240,9 +244,13 @@ analyzeBtn.addEventListener('click', async () => {
     document.getElementById('res-shadow').textContent = shadowVal;
     document.getElementById('res-grid').textContent = useSr ? '1m/px (SR)' : '5m/px (Raw)';
 
-    // Dynamically point to the backend using the current hostname (works for localhost and mobile Wi-Fi IPs)
-    const host = window.location.hostname || '127.0.0.1';
-    const backendUrl = `http://${host}:5000/analyze`;
+    // Dynamically point to the backend
+    const host = window.location.hostname;
+    const isLocal = host === 'localhost' || host === '127.0.0.1' || host === '';
+    // UPDATE THIS URL ONCE YOUR RENDER BACKEND IS DEPLOYED
+    const PROD_BACKEND_URL = 'https://chandra-drishti-backend.onrender.com';
+    const baseUrl = isLocal ? `http://${host || '127.0.0.1'}:5000` : PROD_BACKEND_URL;
+    const backendUrl = `${baseUrl}/analyze`;
 
     try {
         const response = await fetch(backendUrl, {

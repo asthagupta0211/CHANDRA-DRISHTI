@@ -15,7 +15,9 @@ CORS(app)
 # --- CONSTANTS ---
 CLASSES = ['background', 'crater']
 NUM_CLASSES = 2
-MODEL_PATH = 'trained_model.pth' # Relative to where the script is executed
+import os
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+MODEL_PATH = os.path.join(BASE_DIR, 'trained_model.pth')
 
 # Global model instance
 model = None
@@ -396,4 +398,5 @@ def analyze():
 
 if __name__ == '__main__':
     # Listen on 0.0.0.0 so that mobile phones on the same Wi-Fi can connect
-    app.run(host='0.0.0.0', debug=True, port=5000)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', debug=False, port=port)
