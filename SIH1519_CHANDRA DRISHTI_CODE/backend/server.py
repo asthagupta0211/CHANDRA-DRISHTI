@@ -1,3 +1,4 @@
+import os
 import io
 import base64
 import torch
@@ -9,8 +10,13 @@ from flask_cors import CORS
 from torchvision.models.detection import fasterrcnn_mobilenet_v3_large_fpn, faster_rcnn
 from torchvision.transforms import functional as F
 
-app = Flask(__name__)
+FRONTEND_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'frontend')
+app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path='/')
 CORS(app)
+
+@app.route('/')
+def serve_index():
+    return app.send_static_file('index.html')
 
 # --- CONSTANTS ---
 CLASSES = ['background', 'crater']

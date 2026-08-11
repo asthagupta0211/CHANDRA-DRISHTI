@@ -61,10 +61,9 @@ document.getElementById('load-sample-btn').addEventListener('click', async () =>
     try {
         const host = window.location.hostname;
         const isLocal = host === 'localhost' || host === '127.0.0.1' || host === '';
-        // UPDATE THIS URL ONCE YOUR RENDER BACKEND IS DEPLOYED
-        const PROD_BACKEND_URL = 'https://chandra-drishti-backend.onrender.com';
-        const baseUrl = isLocal ? `http://${host || '127.0.0.1'}:5000` : PROD_BACKEND_URL;
-        const sampleUrl = `${baseUrl}/random_sample`;
+        
+        // Use relative URL so it automatically uses the current host (works for both Render and local)
+        const sampleUrl = `/random_sample`;
         
         const btn = document.getElementById('load-sample-btn');
         const oldText = btn.textContent;
@@ -244,13 +243,9 @@ analyzeBtn.addEventListener('click', async () => {
     document.getElementById('res-shadow').textContent = shadowVal;
     document.getElementById('res-grid').textContent = useSr ? '1m/px (SR)' : '5m/px (Raw)';
 
-    // Dynamically point to the backend
-    const host = window.location.hostname;
-    const isLocal = host === 'localhost' || host === '127.0.0.1' || host === '';
-    // UPDATE THIS URL ONCE YOUR RENDER BACKEND IS DEPLOYED
-    const PROD_BACKEND_URL = 'https://chandra-drishti-backend.onrender.com';
-    const baseUrl = isLocal ? `http://${host || '127.0.0.1'}:5000` : PROD_BACKEND_URL;
-    const backendUrl = `${baseUrl}/analyze`;
+    // Dynamically point to the backend using relative URLs
+    // Since Flask is serving the frontend, /analyze will automatically go to the same server
+    const backendUrl = `/analyze`;
 
     try {
         const response = await fetch(backendUrl, {
