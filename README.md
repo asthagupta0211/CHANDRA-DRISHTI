@@ -1,10 +1,10 @@
-# 🌕 CHANDRA DRISHTI
+# CHANDRA DRISHTI
 
 **AI-Based Super-Resolution Hazard Mapping for Safe Lunar Landing**
 
 > *"Vision Beyond the Lunar Horizon"*
 
-🚀 **[Live Demo: Chandra Drishti Web App](https://chandra-drishti-backend.onrender.com/)**
+**[Live Demo: Chandra Drishti Web App](https://chandra-drishti-backend.onrender.com/)**
 
 **CHANDRA DRISHTI** is a lunar terrain-analysis system that uses advanced algorithmic super-resolution to transform 5m TMC lunar imagery into a 1m grid-spacing representation and generate a multi-hazard map for autonomous landing-site selection. 
 
@@ -12,7 +12,7 @@ TMC provides broad lunar coverage, while high-resolution OHRC data has limited c
 
 ---
 
-## ✨ Key Features
+## Key Features
 
 - **5m → 1m Super-Resolution:** Algorithmic upscaling (Lanczos4 + Unsharp Masking) for crisp hazard edge detection.
 - **Slope Hazard Detection:** Identifies steep inclines >10° using DEM gradient processing.
@@ -25,7 +25,7 @@ TMC provides broad lunar coverage, while high-resolution OHRC data has limited c
 
 ---
 
-## ⚙️ How It Works (Pipeline)
+## How It Works (Pipeline)
 
 ```text
 TMC 5m Ortho + DEM
@@ -65,7 +65,7 @@ Safe Zone + Radius
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Technology | Purpose |
 | :--- | :--- |
@@ -80,7 +80,7 @@ Safe Zone + Radius
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```text
 CHANDRA-DRISHTI/
@@ -102,7 +102,7 @@ CHANDRA-DRISHTI/
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Clone the Repository
 ```bash
@@ -143,7 +143,7 @@ Then navigate to `http://localhost:8000` in your web browser.
 
 ---
 
-## ☁️ Deployment
+## Deployment
 
 This project is configured for one-click deployment using **Render**. The Flask server is set up to securely serve the frontend web interface natively.
 
@@ -155,7 +155,7 @@ This project is configured for one-click deployment using **Render**. The Flask 
 
 ---
 
-## 🎯 Expected Output
+## Expected Output
 
 The system targets near-real-time processing, generating a multi-layered response:
 
