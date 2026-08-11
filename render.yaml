@@ -2,6 +2,7 @@ services:
   - type: web
     name: chandra-drishti-backend
     env: python
+    plan: free
     buildCommand: "cd 'SIH1519_CHANDRA DRISHTI_CODE/backend' && pip install -r requirements.txt"
     startCommand: "cd 'SIH1519_CHANDRA DRISHTI_CODE/backend' && gunicorn server:app"
     envVars:
