@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lunar Hazard Mapper — CHANDRA DRISHTI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rajdhani:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .toggle-switch input:checked+.slider {
+            background-color: rgba(0, 255, 255, 0.2);
+        }
+
+        .toggle-switch input:checked+.slider:before {
+            transform: translateX(20px);
+            background-color: var(--cyan);
+            box-shadow: 0 0 10px var(--cyan);
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+            background-color: var(--text-dim);
+            transition: .4s;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Dynamic Slideshow Background -->
+    <div class="slideshow-bg">
+        <div class="slide slide-1"></div>
+        <div class="slide slide-2"></div>
+        <div class="slide slide-3"></div>
+        <div class="slide slide-4"></div>
+        <div class="slide slide-5"></div>
+        <!-- Gradient overlay to ensure text readability -->
+        <div class="slideshow-overlay"></div>
+    </div>
+
+    <div class="scanlines" aria-hidden="true"></div>
+
+    <div class="frame">
+        <header class="topbar">
+            <div class="brand">
+                <span class="brand-mark">◈</span>
+                <div>
+                    <div class="brand-name">CHANDRA DRISHTI</div>
+                    <div class="brand-sub">Vision Beyond the Lunar Horizon</div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 24px; align-items: center;">
+                <div id="real-time-clock"
+                    style="font-family: var(--font-display); font-size: 0.95rem; color: var(--cyan); letter-spacing: 0.1em;">
+                    --:--:--</div>
+                <div class="status" id="status-line">
+                    <span class="status-dot" id="status-dot"></span>
+                    <span id="status-text">SYSTEM READY</span>
+                </div>
+            </div>
+        </header>
+
+        <section class="hero">
+            <h1>LUNAR HAZARD MAPPER</h1>
+            <p>Feed orbital imagery in — get craters, slopes and shadow hazards flagged, and a cleared landing zone
+                marked out.</p>
+        </section>
+
+        <main>
+            <section class="panel reticle" id="panel-input">
+                <div class="panel-head" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; gap: 12px; align-items: baseline;">
+                        <span class="panel-index">01</span>
+                        <h2>Input Imagery</h2>
+                    </div>
+                    <button class="btn-select" id="load-sample-btn" type="button"
+                        style="background: rgba(0,255,255,0.1); border-color: var(--cyan); color: var(--cyan);">Load
+                        Random Sample</button>
+                </div>
+
+                <div class="upload-grid">
+                    <div class="upload-row" id="standard-dropzone" data-target="standard-image">
+                        <div class="upload-row-icon">IMG</div>
+                        <div class="upload-row-body">
+                            <h3>Standard Imagery</h3>
+                            <p>Used for crater detection</p>
+                        </div>
+                        <input type="file" id="standard-image" accept="image/png, image/jpeg, image/jpg" hidden>
+                        <button class="btn-select" type="button"
+                            onclick="document.getElementById('standard-image').click()">Select</button>
+                        <span class="file-name" id="standard-filename">no file</span>
+                    </div>
+
+                    <div class="upload-row" id="dem-dropzone" data-target="dem-image">
+                        <div class="upload-row-icon">DEM</div>
+                        <div class="upload-row-body">
+                            <h3>Elevation Model</h3>
+                            <p>Flags slopes beyond limit · .tif</p>
+                        </div>
+                        <input type="file" id="dem-image" accept="image/tiff, .tif" hidden>
+                        <button class="btn-select" type="button"
+                            onclick="document.getElementById('dem-image').click()">Select</button>
+                        <span class="file-name" id="dem-filename">no file</span>
+                    </div>
+
+                    <div class="upload-row" id="ortho-dropzone" data-target="ortho-image">
+                        <div class="upload-row-icon">ORT</div>
+                        <div class="upload-row-body">
+                            <h3>Orthophoto</h3>
+                            <p>Flags deep shadow zones · .tif</p>
+                        </div>
+                        <input type="file" id="ortho-image" accept="image/tiff, .tif" hidden>
+                        <button class="btn-select" type="button"
+                            onclick="document.getElementById('ortho-image').click()">Select</button>
+                        <span class="file-name" id="ortho-filename">no file</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel reticle" id="panel-params">
+                <div class="panel-head">
+                    <span class="panel-index">02</span>
+                    <h2>Detection Parameters</h2>
+                </div>
+
+                <div class="controls-grid">
+                    <div class="slider-group">
+                        <label for="conf-threshold">AI Confidence <span class="slider-val"
+                                id="conf-val">0.30</span></label>
+                        <input type="range" id="conf-threshold" min="0" max="1" step="0.05" value="0.3">
+                    </div>
+                    <div class="slider-group">
+                        <label for="slope-threshold">Slope Limit <span class="slider-val"
+                                id="slope-val">10°</span></label>
+                        <input type="range" id="slope-threshold" min="0" max="90" step="1" value="10">
+                    </div>
+                    <div class="slider-group">
+                        <label for="shadow-threshold">Shadow Intensity <span class="slider-val"
+                                id="shadow-val">150</span></label>
+                        <input type="range" id="shadow-threshold" min="0" max="255" step="5" value="150">
+                    </div>
+                </div>
+
+                <div
+                    style="margin-bottom: 24px; padding: 12px; background: rgba(0, 255, 255, 0.05); border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div
+                            style="font-family: var(--font-display); font-size: 0.95rem; font-weight: 600; color: var(--cyan); margin-bottom: 2px;">
+                            SUPER RESOLUTION (5m → 1m GRID)</div>
+                        <div style="font-size: 0.85rem; color: var(--text-dim);">Upscales data dynamically using
+                            high-frequency edge recovery.</div>
+                    </div>
+                    <label class="toggle-switch"
+                        style="position: relative; display: inline-block; width: 44px; height: 24px;">
+                        <input type="checkbox" id="sr-toggle" checked style="opacity: 0; width: 0; height: 0;">
+                        <span class="slider"
+                            style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.1); transition: .4s; border-radius: 24px; border: 1px solid var(--border);"></span>
+                    </label>
+                </div>
+
+                <button class="btn-scan" id="analyze-btn">
+                    <span class="btn-text">▸ Initiate Scan</span>
+                    <div class="spinner hidden" id="loading-spinner"></div>
+                </button>
+
+            </section>
+
+            <section class="panel results-section hidden" id="results-section">
+                <div class="panel-head"
+                    style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <div style="display: flex; gap: 12px; align-items: baseline;">
+                        <span class="panel-index">03</span>
+                        <h2>Analysis Results</h2>
+                    </div>
+                    <button class="btn-select" id="new-scan-btn" type="button" style="margin-left: auto;">← NEW
+                        SCAN</button>
+                </div>
+
+                <!-- Selected Parameters Readout -->
+                <div class="params-readout"
+                    style="display: flex; flex-wrap: wrap; gap: 24px; font-family: var(--font-display); font-size: 0.85rem; color: var(--amber); margin-bottom: 24px; border-bottom: 1px solid var(--border-soft); padding-bottom: 12px;">
+                    <div><span style="color: var(--text-faint);">GRID RESOLUTION /</span> <span id="res-grid"
+                            style="color: var(--cyan);">1m/px (SR)</span></div>
+                    <div><span style="color: var(--text-faint);">CONFIDENCE /</span> <span id="res-conf">--</span></div>
+                    <div><span style="color: var(--text-faint);">SLOPE LIMIT /</span> <span id="res-slope">--</span>
+                    </div>
+                    <div><span style="color: var(--text-faint);">SHADOW THRESHOLD /</span> <span
+                            id="res-shadow">--</span></div>
+                </div>
+
+                <!-- Mission Control Readout -->
+                <div class="mission-control hidden reticle" id="mission-control" style="margin-bottom: 24px;">
+                    <div class="lz-head">
+                        <span class="lz-crosshair" id="lz-icon">⊕</span>
+                        <h3 id="lz-title">Safe Landing Zone</h3>
+                    </div>
+
+                    <div
+                        style="font-family: var(--font-display); font-size: 0.95rem; color: var(--text-bright); margin-bottom: 16px; padding: 8px; background: rgba(255,255,255,0.05); border-radius: 4px;">
+                        OVERALL TERRAIN SAFETY: <span id="lz-pct"
+                            style="color: var(--amber); font-weight: bold;">--</span><span
+                            style="color: var(--amber);">%</span>
+                    </div>
+
+                    <!-- Success State -->
+                    <div class="lz-readout" id="lz-success">
+                        <div><span class="lz-label">X</span><span class="lz-value" id="lz-x">--</span></div>
+                        <div><span class="lz-label">Y</span><span class="lz-value" id="lz-y">--</span></div>
+                        <div><span class="lz-label">RADIUS</span><span class="lz-value" id="lz-r">--</span><span
+                                class="lz-unit">px</span></div>
+                        <div id="rover-path-container" style="display: none; grid-column: span 3; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(0, 255, 255, 0.2);">
+                            <span class="lz-label" style="color: var(--cyan);">⛟ ROVER PATH TO ICE:</span>
+                            <span class="lz-value" id="lz-rover" style="color: #ffff00;">--</span><span class="lz-unit" style="color: #ffff00;">m</span>
+                        </div>
+                    </div>
+
+                    <!-- Alternative Zones State (Hidden by default) -->
+                    <div class="lz-alt-zones hidden" id="lz-alt-zones">
+                        <div class="alt-zone-title">⚠ CONTINGENCY: ALTERNATIVE ZONES DETECTED</div>
+                        <div id="alt-zones-container">
+                            <!-- JS will populate alternatives here -->
+                        </div>
+                    </div>
+
+                    <!-- Failure State -->
+                    <div class="lz-failure hidden" id="lz-failure"
+                        style="color: var(--red); font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; text-shadow: 0 0 10px rgba(255,42,95,0.5);">
+                        ⚠ CRITICAL: NO VIABLE LANDING ZONE FOUND
+                    </div>
+                </div>
+
+                <div class="summary-report reticle" id="summary-report"
+                    style="margin-bottom: 24px; padding: 16px; background: rgba(0, 255, 255, 0.05); border: 1px solid var(--border-soft); position: relative;">
+                    <h3 style="margin-bottom: 12px; color: var(--text-bright); font-size: 1.1rem;">Mission Summary
+                        Report</h3>
+                    <button class="btn-select" id="download-report-btn" type="button"
+                        style="position: absolute; top: 12px; right: 16px; font-size: 0.85rem; padding: 4px 8px;">Download Report</button>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 1rem;">
+                        <div>Craters Detected: <span id="sum-craters" style="color: var(--cyan);">0</span></div>
+                        <div>Slope Hazards: <span id="sum-slopes" style="color: var(--cyan);">--</span></div>
+                        <div>Shadow Hazards: <span id="sum-shadows" style="color: var(--cyan);">--</span></div>
+                        <div>Overall Status: <strong id="sum-status" style="color: var(--green);">SAFE</strong></div>
+                    </div>
+                </div>
+
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="master">Master Map</button>
+                    <button class="tab-btn" data-tab="objects">Craters</button>
+                    <button class="tab-btn" data-tab="slopes">Slopes</button>
+                    <button class="tab-btn" data-tab="shadows">Shadows</button>
+                </div>
+
+                <div class="tab-content active reticle" id="tab-master">
+                    <img id="master-img" src="" alt="Master hazard map">
+                    <div class="legend">
+                        <span class="legend-item"><span class="color-box craters"></span> Craters</span>
+                        <span class="legend-item"><span class="color-box slopes"></span> Slopes</span>
+                        <span class="legend-item"><span class="color-box shadows"></span> Shadows</span>
+                    </div>
+                </div>
+
+                <div class="tab-content reticle" id="tab-objects">
+                    <img id="objects-img" src="" alt="Crater detection map">
+                </div>
+
+                <div class="tab-content reticle" id="tab-slopes">
+                    <img id="slopes-img" src="" alt="Slope map">
+                </div>
+
+                <div class="tab-content reticle" id="tab-shadows">
+                    <img id="shadows-img" src="" alt="Shadow map">
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <span>CHANDRA DRISHTI-LHM v1.0</span>
+            <span>OrbitX</span>
+        </footer>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
