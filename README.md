@@ -104,7 +104,7 @@ CHANDRA-DRISHTI/
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/deepanshu-kumar23/CHANDRA-DRISHTI.git
+git clone https://github.com/asthagupta0211/CHANDRA-DRISHTI.git
 cd CHANDRA-DRISHTI
 ```
 
