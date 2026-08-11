@@ -62,8 +62,10 @@ document.getElementById('load-sample-btn').addEventListener('click', async () =>
         const host = window.location.hostname;
         const isLocal = host === 'localhost' || host === '127.0.0.1' || host === '';
         
-        // Use relative URL so it automatically uses the current host (works for both Render and local)
-        const sampleUrl = `/random_sample`;
+        // Pointing to the secure local tunnel!
+        const PROD_BACKEND_URL = 'https://skirt-edge-upcoming-hearts.trycloudflare.com';
+        const baseUrl = isLocal ? `http://${host || '127.0.0.1'}:5000` : PROD_BACKEND_URL;
+        const sampleUrl = `${baseUrl}/random_sample`;
         
         const btn = document.getElementById('load-sample-btn');
         const oldText = btn.textContent;
@@ -243,9 +245,12 @@ analyzeBtn.addEventListener('click', async () => {
     document.getElementById('res-shadow').textContent = shadowVal;
     document.getElementById('res-grid').textContent = useSr ? '1m/px (SR)' : '5m/px (Raw)';
 
-    // Dynamically point to the backend using relative URLs
-    // Since Flask is serving the frontend, /analyze will automatically go to the same server
-    const backendUrl = `/analyze`;
+    // Dynamically point to the backend using the local tunnel
+    const host = window.location.hostname;
+    const isLocal = host === 'localhost' || host === '127.0.0.1' || host === '';
+    const PROD_BACKEND_URL = 'https://skirt-edge-upcoming-hearts.trycloudflare.com';
+    const baseUrl = isLocal ? `http://${host || '127.0.0.1'}:5000` : PROD_BACKEND_URL;
+    const backendUrl = `${baseUrl}/analyze`;
 
     try {
         const response = await fetch(backendUrl, {
