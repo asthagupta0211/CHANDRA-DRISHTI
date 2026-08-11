@@ -1,14 +1,19 @@
 import os
 import io
 import base64
-import torch
-import numpy as np
-import cv2
-from PIL import Image
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from torchvision.models.detection import fasterrcnn_mobilenet_v3_large_fpn, faster_rcnn
-from torchvision.transforms import functional as F
+
+try:
+    import torch
+    import numpy as np
+    import cv2
+    from PIL import Image
+    from torchvision.models.detection import fasterrcnn_mobilenet_v3_large_fpn, faster_rcnn
+    from torchvision.transforms import functional as F
+    ML_AVAILABLE = True
+except ImportError:
+    ML_AVAILABLE = False
 
 FRONTEND_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'frontend')
 app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path='/')
@@ -30,20 +35,22 @@ model = None
 
 def load_model():
     global model
-    if model is None:
-        print("Loading AI Model...")
-        model = fasterrcnn_mobilenet_v3_large_fpn(weights=None)
-        in_features = model.roi_heads.box_predictor.cls_score.in_features
-        model.roi_heads.box_predictor = faster_rcnn.FastRCNNPredictor(in_features, NUM_CLASSES)
+    if not ML_AVAILABLE:
+        print("Running in cloud mode without ML dependencies.")
+        return
+    print("Loading AI Model...")
+    model = fasterrcnn_mobilenet_v3_large_fpn(weights=None)
+    in_features = model.roi_heads.box_predictor.cls_score.in_features
+    model.roi_heads.box_predictor = faster_rcnn.FastRCNNPredictor(in_features, NUM_CLASSES)
+    
+    try:
+        state_dict = torch.load(MODEL_PATH, map_location=torch.device('cpu'))
+        model.load_state_dict(state_dict)
+    except RuntimeError as e:
+        model.load_state_dict(state_dict, strict=False)
         
-        try:
-            state_dict = torch.load(MODEL_PATH, map_location=torch.device('cpu'))
-            model.load_state_dict(state_dict)
-        except RuntimeError as e:
-            model.load_state_dict(state_dict, strict=False)
-            
-        model.eval()
-        print("Model loaded successfully.")
+    model.eval()
+    print("Model loaded successfully.")
 
 # Load model on startup
 load_model()
@@ -146,6 +153,8 @@ def random_sample():
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
+    if not ML_AVAILABLE:
+        return jsonify({"error": "ML dependencies not available in cloud instance. Please run locally."}), 500
     try:
         # Get threshold values from form
         confidence_thresh = float(request.form.get('confidence_threshold', 0.3))
