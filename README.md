@@ -1,201 +1,79 @@
-# CHANDRA DRISHTI
+# Chandra Drishti 🌕
 
-**AI-Based Super-Resolution Hazard Mapping for Safe Lunar Landing**
+<p align="center">
+  <img src="frontend/assets/bg1.png" alt="Chandra Drishti Banner" width="800">
+</p>
 
-> *"Vision Beyond the Lunar Horizon"*
+**Chandra Drishti** (Lunar Vision) is an AI-powered analytical tool designed to identify safe lunar landing zones and plan rover exploration paths. It processes standard optical images, Digital Elevation Models (DEM), and orthomosaics to assess terrain safety using computer vision and machine learning.
 
-**[Live Demo: Chandra Drishti Web App](https://chandra-drishti-backend.onrender.com/)**
+## ✨ Features
 
-**CHANDRA DRISHTI** is a lunar terrain-analysis system that uses advanced algorithmic super-resolution to transform 5m TMC lunar imagery into a 1m grid-spacing representation and generate a multi-hazard map for autonomous landing-site selection. 
+- **Crater Detection**: Utilizes a custom PyTorch Faster R-CNN model (`fasterrcnn_mobilenet_v3_large_fpn`) to accurately detect craters from optical images.
+- **Slope & Hazard Analysis**: Calculates slope gradients from DEMs to identify dangerously steep terrain.
+- **Shadow Detection**: Identifies permanent or hazardous shadowed regions that could obstruct solar panels or visibility.
+- **Safe Landing Zone Identification**: Computes a master safety map by combining all hazard masks to find the optimal primary landing zone, complete with confidence percentages.
+- **Contingency Planning**: Identifies alternative "sub-optimal" backup landing zones if the primary zone is compromised.
+- **Rover Pathfinding**: Plots the shortest, safest path from the landing zone to the nearest crater (potential water-ice source) avoiding known hazards.
+- **Super Resolution (SR)**: Optional algorithmic image upscaling (Lanczos4 + Unsharp Masking) to enhance resolution for finer grid analysis.
 
-TMC provides broad lunar coverage, while high-resolution OHRC data has limited coverage. Our approach aims to reduce this limitation by deriving high-resolution hazard information from widely available TMC data.
+## 🛠 Tech Stack
 
----
+- **Frontend**: Vanilla HTML5, CSS3, JavaScript
+- **Backend**: Python, Flask, Gunicorn
+- **Machine Learning**: PyTorch, TorchVision
+- **Computer Vision**: OpenCV (opencv-python-headless), NumPy, Pillow
 
-## Key Features
+## 📂 Project Structure
 
-- **5m → 1m Super-Resolution:** Algorithmic upscaling (Lanczos4 + Unsharp Masking) for crisp hazard edge detection.
-- **Slope Hazard Detection:** Identifies steep inclines >10° using DEM gradient processing.
-- **Crater & Boulder Detection:** Detects craters >1m using PyTorch Faster R-CNN with MobileNetV3-FPN backbone.
-- **Shadow Hazard Detection:** Dynamic thresholding to flag permanently shadowed regions.
-- **Master Hazard Map:** Fuses all data layers into a single risk assessment map.
-- **Strict 75% Safety Rule:** Automatically aborts missions if overall terrain safety drops below 75%.
-- **Automatic Safe Landing-Zone Detection:** Pinpoints exact coordinates (X, Y) and calculates a safe radius using Euclidean Distance Transform (EDT).
-- **Rover Path Planning:** Autonomously plots a straight-line post-landing exploration path to the nearest water-ice crater.
-
----
-
-## How It Works (Pipeline)
-
-```text
-TMC 5m Ortho + DEM
-        |
-        v
- Super-Resolution
-    5m → 1m
-        |
-        v
- +------+------+------+
- |      |      |      |
- v      v      v      v
-Slope  Crater Shadow Pathfinding
- |      |      |      |
- +------+------+------+
-        |
-        v
- Master Hazard Map
-        |
-        v
- Terrain Safety %
-        |
-   +----+----+
-   |         |
-   v         v
-  ≥75%      <75%
-   |         |
-   v         v
- Accept    Abort
- Landing   Mission
-   |
-   v
-Safe Zone + Radius
+```
+.
+├── backend/
+│   ├── server.py             # Flask API server & ML inference logic
+│   └── requirements.txt      # Python dependencies (optimized for CPU deployment)
+├── frontend/
+│   ├── index.html            # Main UI
+│   ├── style.css             # Styling and layout
+│   └── script.js             # Client-side logic and API communication
+├── render.yaml               # Render Blueprint for automated backend deployment
+└── trained_model.pth         # PyTorch weights for the crater detection model
 ```
 
-*The 75% Safety Rule accepts a landing zone only when overall terrain safety is at least 75%; otherwise, the primary landing zone is rejected and contingency zones are evaluated.*
+## 🚀 Local Setup
 
----
+### Prerequisites
+- Python 3.9+
+- A modern web browser
 
-## Tech Stack
-
-| Technology | Purpose |
-| :--- | :--- |
-| **Python** | Core backend processing |
-| **PyTorch** | Deep Learning object detection |
-| **Faster R-CNN & MobileNetV3-FPN** | Fast, lightweight crater/boulder detection backbone |
-| **OpenCV** | Advanced algorithmic super-resolution (Lanczos4) and image processing |
-| **Rasterio / NumPy** | Geo-raster and numerical mathematical matrix processing |
-| **Flask / REST API** | Decoupled backend communication |
-| **Vanilla JavaScript / CSS / HTML** | Zero-dependency, high-performance tactical frontend |
-| **Euclidean Distance Transform (EDT)**| Safe-Zone Search algorithm |
-
----
-
-## Repository Structure
-
-```text
-CHANDRA-DRISHTI/
-│
-├── CODE_SIH1519_ORION SPACE SYSTEM/
-│   ├── backend/
-│   │   ├── server.py             # Flask API, ML Inference, Image Processing
-│   │   └── models/               # PyTorch Weights (if applicable)
-│   ├── frontend/
-│   │   ├── index.html            # Tactical UI
-│   │   ├── style.css             # Sci-Fi / Cyber CSS Styles
-│   │   └── script.js             # API communication and DOM manipulation
-│   ├── demo_safe/                # Test datasets
-│   └── demo_abort/               # Test datasets for failure scenarios
-│
-├── README.md
-└── requirements.txt
-```
-
----
-
-## Quick Start
-
-### 1. Clone the Repository
+### 1. Start the Backend
+Navigate to the root directory of the project and install the dependencies:
 ```bash
-git clone https://github.com/asthagupta0211/CHANDRA-DRISHTI.git
-cd CHANDRA-DRISHTI
-```
-
-### 2. Create Environment
-```bash
-python -m venv venv
-```
-**Windows:**
-```bash
-venv\Scripts\activate
-```
-**Linux/macOS:**
-```bash
-source venv/bin/activate
-```
-
-### 3. Install Dependencies
-```bash
+cd backend
 pip install -r requirements.txt
 ```
 
-### 4. Run the Backend Server
+Run the Flask server (from the root directory so it finds the model):
 ```bash
-python "CODE_SIH1519_ORION SPACE SYSTEM/backend/server.py"
+cd ..
+python backend/server.py
 ```
+*The API will start on `http://127.0.0.1:5000`.*
 
-### 5. Launch the UI
-You must host the frontend to avoid browser CORS issues. Open a new terminal and run:
+### 2. Start the Frontend
+Simply open `frontend/index.html` in your web browser. Or, you can serve it via a local static server:
 ```bash
-cd "CODE_SIH1519_ORION SPACE SYSTEM/frontend"
+cd frontend
 python -m http.server 8000
 ```
-Then navigate to `http://localhost:8000` in your web browser.
+Then visit `http://localhost:8000`.
 
----
+## ☁️ Live Cloud Deployment (Free)
 
-## Deployment
+This project includes a built-in Cloudflare tunnel script (`run_live.py`) which allows you to expose your local Flask server to the public internet instantly and for free, without needing any complex cloud hosting.
 
-This project is configured for one-click deployment using **Render**. The Flask server is set up to securely serve the frontend web interface natively.
-
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/asthagupta0211/CHANDRA-DRISHTI)
-
-1. Click the **Deploy to Render** button above.
-2. Render will automatically detect the `render.yaml` file, build the environment, and deploy your live URL.
-3. *Note on Machine Learning:* By default, the heavy PyTorch AI models are disabled in the cloud environment to accommodate free-tier memory constraints (512MB RAM). For full AI processing, run the backend script locally.
-
----
-
-## Expected Output
-
-The system targets near-real-time processing, generating a multi-layered response:
-
-1. **1m Terrain Map**
-2. **Slope Map** (Binarized gradient hazards)
-3. **Crater/Boulder Map** (Bounding boxes and confidence intervals)
-4. **Shadow Map** (Illumination hazards)
-5. **Master Hazard Map** (Fused data)
-6. **Safety Score** (%)
-7. **Safe Landing Zone** (X, Y, Radius)
-8. **Rover Post-Landing Path** (Trajectory and distance to nearest crater)
-
----
-
-## 🛰️ Data Sources
-
-- **Chandrayaan-2 TMC-2** — 5m DEM & Ortho imagery
-- **Chandrayaan-2 OHRC** — 25cm benchmark data
-- **NASA LROC NAC** — High-resolution validation data
-
----
-
-## 👥 Team — CHANDRA DRISHTI
-
-**Smart India Hackathon 2026**
-
-- **Deepanshu Kumar** — Team Leader
-- Astha Gupta
-- Sheetal R Odedra
-- Darshan Bhawsar
-- Gajendra Sharma
-- Prabhash Kumar Yadav
-
----
-
-## 🔮 Future Scope
-
-- Real-time onboard deployment hardware integration.
-- Extension of super-resolution using advanced Generative Adversarial Networks (GANs).
-- Multi-modal terrain fusion incorporating thermal and spectral data.
-- Autonomous descent optimization based on real-time LIDAR.
-- Rover navigation integration utilizing live landing zone telemetry.
-- Extension to Mars and asteroid landing missions.
+1. Ensure the backend dependencies are installed (`pip install -r backend/requirements.txt`).
+2. Run the live tunnel script:
+```bash
+python run_live.py
+```
+3. The script will automatically download `cloudflared`, start the AI backend, and generate a live `https://<random-words>.trycloudflare.com` URL.
+4. (Optional) Use a service like `is.gd` or `bitly.com` to create a custom, branded short-link for your generated URL!
