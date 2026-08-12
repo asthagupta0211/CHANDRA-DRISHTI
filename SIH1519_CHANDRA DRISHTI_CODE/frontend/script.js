@@ -59,13 +59,8 @@ fileInputs.forEach(type => {
 // ---------- Load Sample Data ----------
 document.getElementById('load-sample-btn').addEventListener('click', async () => {
     try {
-        const host = window.location.hostname;
-        const isLocal = host === 'localhost' || host === '127.0.0.1' || host === '';
-        
-        // Pointing to the secure local tunnel!
-        const PROD_BACKEND_URL = 'https://skirt-edge-upcoming-hearts.trycloudflare.com';
-        const baseUrl = isLocal ? `http://${host || '127.0.0.1'}:5000` : PROD_BACKEND_URL;
-        const sampleUrl = `${baseUrl}/random_sample`;
+        // Use relative URL so it works locally and on any deployed environment
+        const sampleUrl = `/random_sample`;
         
         const btn = document.getElementById('load-sample-btn');
         const oldText = btn.textContent;
@@ -245,12 +240,8 @@ analyzeBtn.addEventListener('click', async () => {
     document.getElementById('res-shadow').textContent = shadowVal;
     document.getElementById('res-grid').textContent = useSr ? '1m/px (SR)' : '5m/px (Raw)';
 
-    // Dynamically point to the backend using the local tunnel
-    const host = window.location.hostname;
-    const isLocal = host === 'localhost' || host === '127.0.0.1' || host === '';
-    const PROD_BACKEND_URL = 'https://skirt-edge-upcoming-hearts.trycloudflare.com';
-    const baseUrl = isLocal ? `http://${host || '127.0.0.1'}:5000` : PROD_BACKEND_URL;
-    const backendUrl = `${baseUrl}/analyze`;
+    // Use relative URL so it works locally and on any deployed environment
+    const backendUrl = `/analyze`;
 
     try {
         const response = await fetch(backendUrl, {
