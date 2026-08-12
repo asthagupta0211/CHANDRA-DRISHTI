@@ -81,6 +81,3 @@ This project is configured to be easily deployed to **Vercel** and **Render**.
 2. Set the "Root Directory" to `frontend`, and deploy.
    - *Note: Once the backend is live, remember to update the `PROD_BACKEND_URL` in `frontend/script.js` with your new Render URL and push to GitHub.*
 
-## 📜 License
-
-MIT License. See `LICENSE` for more details.
