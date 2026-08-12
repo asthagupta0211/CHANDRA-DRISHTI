@@ -3,8 +3,8 @@ services:
     name: chandra-drishti-backend
     env: python
     plan: free
-    buildCommand: "cd 'SIH1519_CHANDRA DRISHTI_CODE/backend' && pip install -r requirements.txt"
-    startCommand: "cd 'SIH1519_CHANDRA DRISHTI_CODE/backend' && gunicorn server:app"
+    buildCommand: "cd 'SIH1519_CHANDRA DRISHTI_CODE/backend' && pip install --no-cache-dir -r requirements.txt"
+    startCommand: "cd 'SIH1519_CHANDRA DRISHTI_CODE/backend' && gunicorn --workers 1 --threads 2 server:app"
     envVars:
       - key: PYTHON_VERSION
         value: 3.10.0
