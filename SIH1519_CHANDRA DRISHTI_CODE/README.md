@@ -66,18 +66,14 @@ python -m http.server 8000
 ```
 Then visit `http://localhost:8000`.
 
-## ☁️ Deployment
+## ☁️ Live Cloud Deployment (Free)
 
-This project is configured to be easily deployed to **Vercel** and **Render**.
+This project includes a built-in Cloudflare tunnel script (`run_live.py`) which allows you to expose your local Flask server to the public internet instantly and for free, without needing any complex cloud hosting.
 
-### Backend (Render)
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/asthagupta0211/CHANDRA-DRISHTI)
-
-1. Click the **Deploy to Render** button above.
-2. Render will automatically detect the `render.yaml` file and deploy the Flask API.
-
-### Frontend (Vercel)
-1. Connect this repository to [Vercel](https://vercel.com/).
-2. Set the "Root Directory" to `frontend`, and deploy.
-   - *Note: Once the backend is live, remember to update the `PROD_BACKEND_URL` in `frontend/script.js` with your new Render URL and push to GitHub.*
-
+1. Ensure the backend dependencies are installed (`pip install -r backend/requirements.txt`).
+2. Run the live tunnel script:
+```bash
+python run_live.py
+```
+3. The script will automatically download `cloudflared`, start the AI backend, and generate a live `https://<random-words>.trycloudflare.com` URL.
+4. (Optional) Use a service like `is.gd` or `bitly.com` to create a custom, branded short-link for your generated URL!
