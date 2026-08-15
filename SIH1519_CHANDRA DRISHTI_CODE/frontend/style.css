@@ -31,7 +31,7 @@
 }
 
 body {
-    background: var(--bg);
+    background: transparent;
     color: var(--text);
     font-family: var(--font-body);
     min-height: 100vh;
@@ -318,7 +318,7 @@ body {
 }
 
 .upload-row-body h3 {
-    font-size: 1.0.78rem;
+    font-size: 1rem;
     font-weight: 500;
     margin-bottom: 2px;
 }
@@ -419,7 +419,7 @@ button {
     border: none;
     padding: 16px;
     font-family: var(--font-display);
-    font-size: 1.0.78rem;
+    font-size: 1rem;
     font-weight: 700;
     letter-spacing: 0.1em;
     display: flex;
@@ -475,7 +475,7 @@ button {
 
 .lz-crosshair {
     color: var(--green);
-    font-size: 1.0.78rem;
+    font-size: 1rem;
 }
 
 .lz-head h3 {
@@ -509,7 +509,7 @@ button {
 }
 
 .lz-unit {
-    font-size: 1.0.78rem;
+    font-size: 1rem;
     color: var(--text-dim);
     margin-left: 4px;
 }
